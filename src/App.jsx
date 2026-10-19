@@ -10,7 +10,16 @@ const badgeDefinitions=[
   {id:'focus-master',name:'Focus Master',icon:'🧘',description:'Complete 5 focus sessions',condition:(s)=>s.focusSessions>=5},
   {id:'note-taker',name:'Note Taker',icon:'',description:'Create 5 notes',condition:(s)=>s.notesCount>=5},
   {id:'project-launcher',name:'Project Launcher',icon:'🚀',description:'Create your first project',condition:(s)=>s.projectsCount>=1},
-  {id:'task-ten',name:'Task Machine',icon:'',description:'Complete 10 tasks',condition:(s)=>s.tasksCompleted>=10}
+  {id:'task-ten',name:'Task Machine',icon:'',description:'Complete 10 tasks',condition:(s)=>s.tasksCompleted>=10},
+  {id:'event-planner',name:'Event Planner',icon:'',description:'Add your first calendar event',condition:(s)=>s.eventsCount>=1},
+  {id:'goal-setter',name:'Goal Setter',icon:'',description:'Create your first goal',condition:(s)=>s.goalsCount>=1},
+  {id:'night-owl',name:'Night Owl',icon:'',description:'Use dark mode',condition:(s)=>s.darkMode},
+  {id:'search-pro',name:'Search Pro',icon:'',description:'Use search 10 times',condition:(s)=>s.searchCount>=10},
+  {id:'streak-ten',name:'Unstoppable',icon:'',description:'Maintain a 10-day streak',condition:(s)=>s.streak>=10},
+  {id:'focus-ten',name:'Deep Worker',icon:'',description:'Complete 10 focus sessions',condition:(s)=>s.focusSessions>=10},
+  {id:'note-master',name:'Idea Vault',icon:'',description:'Create 10 notes',condition:(s)=>s.notesCount>=10},
+  {id:'task-twenty',name:'Productivity King',icon:'',description:'Complete 20 tasks',condition:(s)=>s.tasksCompleted>=20},
+  {id:'all-pages',name:'Explorer',icon:'',description:'Visit all 8 pages',condition:(s)=>s.pagesVisited>=8}
 ];
 function stored(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
 function load(){try{return JSON.parse(localStorage.getItem('xnode-tasks'))||examples}catch{return examples}}
@@ -32,7 +41,7 @@ const done=tasks.filter(t=>t.done).length,percentage=tasks.length?Math.round(don
 const time=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
 const streak=getStreak(tasks);
 const focusSessions=stored('xnode-focus-sessions',0);
-const stats={tasksCompleted:done,streak,focusSessions,notesCount:notes.length,projectsCount:projects.length};
+const stats={tasksCompleted:done,streak,focusSessions,notesCount:notes.length,projectsCount:projects.length,eventsCount:events.length,goalsCount:goals.length,darkMode:dark,searchCount:search.length>0?1:0,pagesVisited:new Set([page]).size};
 const unlockedBadges=badgeDefinitions.filter(b=>b.condition(stats));
 const lockedBadges=badgeDefinitions.filter(b=>!b.condition(stats));
 function navigate(p){setPage(p);setMenu(false);window.scrollTo({top:0,behavior:'smooth'})}
