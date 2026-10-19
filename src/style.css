@@ -228,6 +228,47 @@
 .dark .ai-insight-icon{background:#37316b}
 .dark .ai-insight-type{background:#37316b;color:#c4b5fd}
 
+/* ═══ AI Dashboard Summary ═══ */
+.ai-dashboard-summary{background:linear-gradient(135deg,#f0edff 0%,#e8f4ff 40%,#faf5ff 70%,#eef2ff 100%);border:1px solid #ddd8ff;border-radius:17px;padding:22px 24px;margin-bottom:17px;position:relative;overflow:hidden;box-shadow:0 5px 20px #6b5df008}
+.ai-dashboard-summary::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,#c4b5fd22,transparent 70%);border-radius:50%;pointer-events:none}
+.ai-dashboard-summary::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;background:radial-gradient(circle,#93c5fd18,transparent 70%);border-radius:50%;pointer-events:none}
+.ai-dashboard-summary-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;position:relative;z-index:1}
+.ai-dashboard-summary-avatar{width:42px;height:42px;background:linear-gradient(135deg,#7c3aed,#6366f1);border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0;box-shadow:0 3px 12px #7c3aed30}
+.ai-dashboard-summary-title .overline{color:#7c6ae0;display:block;margin-bottom:4px}
+.ai-dashboard-summary-title h3{font:800 16px Manrope;letter-spacing:-.3px;margin:0;display:flex;align-items:center;gap:8px;color:#242747}
+.ai-dashboard-summary-title h3 svg{color:#7c6ae0}
+.ai-dashboard-summary-header .pill{margin-left:auto}
+.ai-dashboard-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;position:relative;z-index:1}
+.ai-dashboard-summary-card{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.85);backdrop-filter:blur(8px);border-radius:14px;padding:16px;border:1px solid #e8e4ff;transition:all .2s ease;animation:aiInsightIn .4s ease both}
+.ai-dashboard-summary-card:nth-child(2){animation-delay:.06s}
+.ai-dashboard-summary-card:nth-child(3){animation-delay:.12s}
+.ai-dashboard-summary-card:nth-child(4){animation-delay:.18s}
+.ai-dashboard-summary-card:hover{border-color:#b8a9fd;box-shadow:0 4px 18px #6b5df015;transform:translateY(-1px)}
+.ai-dashboard-summary-card-icon{font-size:20px;flex-shrink:0;width:38px;height:38px;display:grid;place-items:center;background:linear-gradient(135deg,#f0edff,#e8f0ff);border-radius:11px}
+.ai-dashboard-summary-card p{font-size:12px;line-height:1.65;color:#3a3d5c;margin:0}
+.ai-dashboard-summary-type{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 8px;border-radius:8px;margin-top:6px}
+.ai-dashboard-summary-type.type-greeting{color:#6366f1;background:#eef2ff}
+.ai-dashboard-summary-type.type-accomplishment{color:#059669;background:#ecfdf5}
+.ai-dashboard-summary-type.type-recommendation{color:#d97706;background:#fffbeb}
+.ai-dashboard-summary-type.type-motivation{color:#dc2626;background:#fef2f2}
+.ai-dashboard-summary-type.type-wellness{color:#0891b2;background:#ecfeff}
+.dark .ai-dashboard-summary{background:linear-gradient(135deg,#1e1b4b 0%,#1e2a4a 40%,#2a1f46 70%,#1e2245 100%);border-color:#3b3670;box-shadow:0 5px 20px #00000020}
+.dark .ai-dashboard-summary::before{background:radial-gradient(circle,#6366f120,transparent 70%)}
+.dark .ai-dashboard-summary::after{background:radial-gradient(circle,#818cf815,transparent 70%)}
+.dark .ai-dashboard-summary-title h3{color:#f3f2ff}
+.dark .ai-dashboard-summary-avatar{box-shadow:0 3px 12px #6366f150}
+.dark .ai-dashboard-summary-card{background:rgba(33,34,59,0.85);border-color:#3b3c5c}
+.dark .ai-dashboard-summary-card:hover{border-color:#6366f1;box-shadow:0 4px 18px #6366f120}
+.dark .ai-dashboard-summary-card p{color:#e0dff5}
+.dark .ai-dashboard-summary-card-icon{background:linear-gradient(135deg,#2d2b55,#252850)}
+.dark .ai-dashboard-summary-type.type-greeting{color:#a5b4fc;background:#1e1b4b}
+.dark .ai-dashboard-summary-type.type-accomplishment{color:#6ee7b7;background:#064e3b}
+.dark .ai-dashboard-summary-type.type-recommendation{color:#fcd34d;background:#451a03}
+.dark .ai-dashboard-summary-type.type-motivation{color:#fca5a5;background:#450a0a}
+.dark .ai-dashboard-summary-type.type-wellness{color:#67e8f9;background:#083344}
+@media(max-width:600px){.ai-dashboard-summary{padding:16px}.ai-dashboard-summary-grid{grid-template-columns:1fr}.ai-dashboard-summary-header{flex-wrap:wrap}.ai-dashboard-summary-header .pill{margin-left:0;margin-top:6px}}
+@media(max-width:1000px){.ai-dashboard-summary-grid{grid-template-columns:repeat(2,1fr)}}
+
 /* ═══ AI Task Preview (inline when typing) ═══ */
 .ai-task-preview{display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(90deg,#f5f1ff,#edf6ff);border:1px solid #e0dcff;border-radius:10px;margin-bottom:12px;font-size:11px;animation:aiSlideDown .25s ease}
 @keyframes aiSlideDown{from{opacity:0;max-height:0;padding:0 14px;margin:0}to{opacity:1;max-height:80px}}

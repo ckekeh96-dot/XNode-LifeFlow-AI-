@@ -128,6 +128,51 @@ function getContextualSuggestions(tasks,notes,focusSessions,page){
 
 function fmtTime(m){return m>=60?`${Math.floor(m/60)}h${m%60?' '+m%60+'m':''}`.trim():`${m} min`}
 
+function generateDashboardSummary(tasks,projects,focusSessions,streak){
+  const hour=new Date().getHours();
+  const done=tasks.filter(t=>t.done).length;
+  const total=tasks.length;
+  const pct=total?Math.round(done/total*100):0;
+  const pending=total-done;
+  const insights=[];
+  let greeting='';
+  if(hour<12)greeting='\u2600\ufe0f Good morning';
+  else if(hour<17)greeting='\ud83c\udf24\ufe0f Good afternoon';
+  else if(hour<21)greeting='\ud83c\udf19 Good evening';
+  else greeting='\u2b50 Working late';
+
+  if(pct===0&&total>0)insights.push({icon:'\ud83d\ude80',text:greeting+'! You have '+total+' task'+(total>1?'s':'')+' ahead. Start with one small win to build momentum.',type:'greeting'});
+  else if(pct<50)insights.push({icon:'\ud83d\udcaa',text:greeting+'! You\'ve completed '+pct+'% of your tasks. Great start \u2014 keep pushing through!',type:'greeting'});
+  else if(pct<100)insights.push({icon:'\ud83d\udd25',text:greeting+'! At '+pct+'% completion, you\'re almost there. '+pending+' task'+(pending!==1?'s':'')+' remaining \u2014 you\'ve got this!',type:'greeting'});
+  else insights.push({icon:'\ud83c\udf89',text:greeting+'! All '+total+' tasks completed! Outstanding work. Consider planning your next challenge.',type:'greeting'});
+
+  if(done>0){
+    const cats={};
+    tasks.filter(t=>t.done).forEach(t=>{const c=t.category||'General';cats[c]=(cats[c]||0)+1});
+    const top=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+    if(top)insights.push({icon:'\ud83d\udcca',text:'You\'ve accomplished '+top[1]+' '+top[0]+' task'+(top[1]>1?'s':'')+' so far. Your focus on '+top[0].toLowerCase()+' is paying off!',type:'accomplishment'});
+    else insights.push({icon:'\u2705',text:done+' task'+(done>1?'s':'')+' checked off. Every step forward counts!',type:'accomplishment'});
+  }
+
+  if(projects.length>3)insights.push({icon:'\ud83d\udcc2',text:'With '+projects.length+' active projects, consider prioritizing one for deeper focus today. Multitasking can slow progress.',type:'recommendation'});
+  else if(projects.length>0)insights.push({icon:'\ud83c\udfaf',text:'You have '+projects.length+' active project'+(projects.length>1?'s':'')+'. '+((total>0&&pct>=50)?'Great task progress \u2014 channel that energy into your projects!':'Tackle your highest-priority task to move the needle on your projects.'),type:'recommendation'});
+
+  if(streak===0)insights.push({icon:'\ud83c\udf31',text:'Start your streak today! Completing even one task begins the momentum.',type:'motivation'});
+  else if(streak===1)insights.push({icon:'\ud83d\udd25',text:'Your 1-day streak is building. Consistency is key to progress.',type:'motivation'});
+  else if(streak<5)insights.push({icon:'\u26a1',text:'A '+streak+'-day streak! You\'re establishing great habits. Keep the chain going.',type:'motivation'});
+  else if(streak<10)insights.push({icon:'\ud83d\udcaa',text:'A '+streak+'-day streak \u2014 impressive discipline! You\'re in the zone.',type:'motivation'});
+  else insights.push({icon:'\ud83c\udfc6',text:'A '+streak+'-day streak \u2014 unstoppable! You\'re a productivity champion.',type:'motivation'});
+
+  if(focusSessions===0&&total>0)insights.push({icon:'\u23f1\ufe0f',text:'Try a 25-minute focus session to accelerate your progress. Deep work makes a real difference.',type:'recommendation'});
+  else if(focusSessions===1)insights.push({icon:'\ud83e\uddd8',text:'1 focus session done. Aim for 2\u20133 deep work blocks for a highly productive day.',type:'motivation'});
+  else if(focusSessions>=3)insights.push({icon:'\u2615',text:focusSessions+' focus sessions completed! Consider taking a break to recharge before your next deep work block.',type:'wellness'});
+
+  if(hour>=22||hour<6)insights.push({icon:'\ud83c\udf1b',text:'Late night session \u2014 remember that rest is part of productivity. Consider wrapping up and tackling things fresh tomorrow.',type:'wellness'});
+  else if(pending===0&&total>0)insights.push({icon:'\u2728',text:'All clear! With no pending tasks, now is a great time to plan tomorrow or explore a new goal.',type:'recommendation'});
+
+  return insights.slice(0,4);
+}
+
 /* =========================================================
    APP COMPONENT
    ========================================================= */
@@ -180,6 +225,7 @@ export default function App(){
 
   /* Derived AI data (memoized) */
   const aiInsights=useMemo(()=>generateInsights(tasks,notes,stored('xnode-focus-sessions',0)),[tasks,notes]);
+  const aiDashboardSummary=useMemo(()=>generateDashboardSummary(tasks,projects,stored('xnode-focus-sessions',0),getStreak(tasks)),[tasks,projects]);
   const aiSchedule=useMemo(()=>suggestSchedule(tasks),[tasks]);
   const aiDraftAnalysis=useMemo(()=>draft.trim()?analyzeTask(draft):null,[draft]);
   const ctxSuggestions=useMemo(()=>getContextualSuggestions(tasks,notes,stored('xnode-focus-sessions',0),page),[tasks,notes,page]);
@@ -250,6 +296,9 @@ export default function App(){
 
   {page==='Overview'&&<div className="overview-content">
   <div className="stats">{[[Check,'Tasks completed',done+' / '+tasks.length,'Keep the momentum going','mint'],[Target,'Daily progress',percentage+'%','Of your planned tasks','lavender'],[FolderKanban,'Active projects',String(projects.length),'Creative things in motion','peach'],[Timer,'Focus sessions',String(focusSessions),'Deep work completed','blue']].map(([Icon,label,value,description,color])=><div className="stat" key={label}><div className={'stat-icon '+color}><Icon size={21}/></div><div><span>{label}</span><strong>{value}</strong><small>{description}</small></div></div>)}</div>
+
+  {/* AI Dashboard Summary */}
+  <section className="ai-dashboard-summary"><div className="ai-dashboard-summary-header"><div className="ai-dashboard-summary-avatar">{'\ud83e\udde0'}</div><div className="ai-dashboard-summary-title"><span className="overline">AI DASHBOARD SUMMARY</span><h3><Brain size={18}/> Your personalized insights</h3></div><span className="pill ai-pill">DEMO AI</span></div><div className="ai-dashboard-summary-grid">{aiDashboardSummary.map((ins,i)=><div className="ai-dashboard-summary-card" key={i}><span className="ai-dashboard-summary-card-icon">{ins.icon}</span><div><p>{ins.text}</p><small className={'ai-dashboard-summary-type type-'+ins.type}>{ins.type}</small></div></div>)}</div></section>
 
   {/* AI Productivity Insights */}
   <section className="panel ai-insights-panel"><div className="panel-heading"><div><span className="overline">AI-POWERED ANALYSIS</span><h3><Brain size={19}/> Productivity Insights</h3></div><span className="pill ai-pill">DEMO AI</span></div><div className="ai-insights-grid">{aiInsights.slice(0,4).map((ins,i)=><div className="ai-insight-card" key={i}><span className="ai-insight-icon">{ins.icon}</span><div><p>{ins.text}</p><small className="ai-insight-type">{ins.type}</small></div></div>)}</div></section>
