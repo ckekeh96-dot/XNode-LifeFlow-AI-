@@ -19,7 +19,17 @@ const badgeDefinitions=[
   {id:'focus-ten',name:'Deep Worker',icon:'',description:'Complete 10 focus sessions',condition:(s)=>s.focusSessions>=10},
   {id:'note-master',name:'Idea Vault',icon:'',description:'Create 10 notes',condition:(s)=>s.notesCount>=10},
   {id:'task-twenty',name:'Productivity King',icon:'',description:'Complete 20 tasks',condition:(s)=>s.tasksCompleted>=20},
-  {id:'all-pages',name:'Explorer',icon:'',description:'Visit all 8 pages',condition:(s)=>s.pagesVisited>=8}
+  {id:'all-pages',name:'Explorer',icon:'🌍',description:'Visit all 8 pages',condition:(s)=>s.pagesVisited>=8},
+  {id:'week-warrior',name:'Week Warrior',icon:'📆',description:'Maintain a 7-day streak',condition:(s)=>s.streak>=7},
+  {id:'focus-veteran',name:'Focus Veteran',icon:'⏱️',description:'Complete 20 focus sessions',condition:(s)=>s.focusSessions>=20},
+  {id:'note-collector',name:'Note Collector',icon:'📓',description:'Create 20 notes',condition:(s)=>s.notesCount>=20},
+  {id:'project-pro',name:'Project Pro',icon:'💼',description:'Create 5 projects',condition:(s)=>s.projectsCount>=5},
+  {id:'goal-crusher',name:'Goal Crusher',icon:'💎',description:'Create 5 goals',condition:(s)=>s.goalsCount>=5},
+  {id:'event-expert',name:'Event Expert',icon:'🎪',description:'Add 10 calendar events',condition:(s)=>s.eventsCount>=10},
+  {id:'accessibility-champion',name:'Accessibility Champion',icon:'♿',description:'Enable high contrast mode',condition:(s)=>s.highContrast},
+  {id:'task-legend',name:'Task Legend',icon:'🏆',description:'Complete 50 tasks',condition:(s)=>s.tasksCompleted>=50},
+  {id:'zen-master',name:'Zen Master',icon:'🧘',description:'Complete 50 focus sessions',condition:(s)=>s.focusSessions>=50},
+  {id:'note-ninja',name:'Note Ninja',icon:'🥷',description:'Create 25 notes',condition:(s)=>s.notesCount>=25}
 ];
 function stored(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
 function load(){try{return JSON.parse(localStorage.getItem('xnode-tasks'))||examples}catch{return examples}}
@@ -41,7 +51,7 @@ const done=tasks.filter(t=>t.done).length,percentage=tasks.length?Math.round(don
 const time=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
 const streak=getStreak(tasks);
 const focusSessions=stored('xnode-focus-sessions',0);
-const stats={tasksCompleted:done,streak,focusSessions,notesCount:notes.length,projectsCount:projects.length,eventsCount:events.length,goalsCount:goals.length,darkMode:dark,searchCount:search.length>0?1:0,pagesVisited:new Set([page]).size};
+const stats={tasksCompleted:done,streak,focusSessions,notesCount:notes.length,projectsCount:projects.length,eventsCount:events.length,goalsCount:goals.length,darkMode:dark,highContrast:contrast,searchCount:search.length>0?1:0,pagesVisited:new Set([page]).size};
 const unlockedBadges=badgeDefinitions.filter(b=>b.condition(stats));
 const lockedBadges=badgeDefinitions.filter(b=>!b.condition(stats));
 function navigate(p){setPage(p);setMenu(false);window.scrollTo({top:0,behavior:'smooth'})}
